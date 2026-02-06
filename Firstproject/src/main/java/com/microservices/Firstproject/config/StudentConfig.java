@@ -16,4 +16,8 @@ public class StudentConfig {
 	public RestTemplate getRestTemplate() {
 		return new RestTemplate();
 	}
+	@Bean
+	public WebClient webClient() {
+		return WebClient.builder().build();
+	}
 }
