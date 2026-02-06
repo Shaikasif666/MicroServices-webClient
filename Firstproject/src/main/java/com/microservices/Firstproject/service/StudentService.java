@@ -20,8 +20,8 @@ public class StudentService {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	@Autowired
-	RestTemplate restTemplate;
+    @Autowired
+	WebClient webClient;
 	
 	//getAllstudents
  public	List<Student> getAllStudents(){
@@ -32,7 +32,11 @@ public class StudentService {
 		Student student= studentrepo.findById(id).orElseThrow();
 		
 		StudentResponse studentResponse = modelMapper.map(student, StudentResponse.class);
-		Address address= restTemplate.getForObject("http://localhost:8002/api/v1/getAdd/{id}", Address.class, id);
+		Address address= webClient.get()
+				.uri("http://localhost:8002/api/v1/getAdd/{id}",id)
+				.retrieve()
+				.bodyToMono(Address.class)
+				.block();
 		
 		studentResponse.setAddress(address);
 		return studentResponse;
